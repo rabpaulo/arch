@@ -49,7 +49,7 @@ pacman --noconfirm -Sy bluez bluez-utils pulseaudio-bluetooth networkmanager \
         xorg xorg-xinit dmenu unzip python-pip lf mediainfo libbsd \
 	    noto-fonts-cjk noto-fonts-emoji noto-fonts libertinus-font perl-image-exiftool npm jq file-roller \
 	    p7zip zsh-syntax-highlighting zsh-autosuggestions pass openssh texlive code progress linux-headers discord \
-        pcmanfm-qt3 syncthing
+        pcmanfm-gtk3 syncthing xcompmgr
 systemctl enable NetworkManager 
 systemctl enable bluetooth 
 
