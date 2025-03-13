@@ -40,16 +40,19 @@ sed -i 's/GRUB_TIMEOUT=5/GRUB_TIMEOUT=0/' /etc/default/grub
 sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"/GRUB_CMDLINE_LINUX_DEFAULT="amdgpu.ppfeaturemask=0xffffffff loglevel=3 quiet"/g' /etc/default/grub
 grub-mkconfig -o /boot/grub/grub.cfg
 
-pacman --noconfirm -Sy bluez bluez-utils pulseaudio-bluetooth networkmanager \
-        btop qbittorrent nicotine+ firefox gimp obsidian \
-        git rsync yt-dlp bc ffmpegthumbnailer neovim \
-         cmus zathura zathura-pdf-mupdf unrar mpv \
-        pulseaudio pulsemixer polkit xclip xwallpaper ufw imagemagick \
-        man zsh nsxiv upower tmux fzf dunst nodejs aria2 clipmenu \
-        xorg xorg-xinit dmenu unzip python-pip lf mediainfo libbsd \
-	    noto-fonts-cjk noto-fonts-emoji noto-fonts libertinus-font perl-image-exiftool npm jq file-roller \
-	    p7zip zsh-syntax-highlighting zsh-autosuggestions pass openssh texlive code progress linux-headers discord \
-        pcmanfm-gtk3 syncthing xcompmgr
+pacman --noconfirm -Sy \
+    networkmanager upower ufw polkit man file-roller p7zip unzip unrar bc jq \
+    pulseaudio pulsemixer pulseaudio-bluetooth bluez bluez-utils cmus \
+    gimp mpv ffmpegthumbnailer imagemagick mediainfo libbsd nsxiv \
+    noto-fonts noto-fonts-cjk noto-fonts-emoji libertinus-font \
+    git rsync syncthing aria2 openssh \
+    neovim python-pip npm nodejs texlive code linux-headers \
+    btop tmux fzf lf xclip xwallpaper xcompmgr \
+    gnome-keyring pcmanfm-gtk3 dmenu xorg xorg-xinit dunst clipmenu \
+    firefox qbittorrent nicotine+ discord \
+    zathura zathura-pdf-mupdf \
+    zsh zsh-syntax-highlighting zsh-autosuggestions pass \
+    yt-dlp perl-image-exiftool
 systemctl enable NetworkManager 
 systemctl enable bluetooth 
 
@@ -109,7 +112,7 @@ cd
 
 sudo pacman -S --needed git base-devel && git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si cd $HOME
 
-yay -S cmusfm downgrade gallery-dl-git brave-bin nvim-packer-git ueberzugpp upscayl-bin firefox-nightly-bin
+yay -S cmusfm downgrade gallery-dl-git brave-bin nvim-packer-git ueberzugpp upscayl-bin sioyek
 yay -Yc
 
 nvim -c ':PackerSync'
