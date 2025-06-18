@@ -45,12 +45,12 @@ pacman --noconfirm -Sy \
     pulseaudio pulsemixer pulseaudio-bluetooth bluez bluez-utils cmus \
     gimp mpv ffmpegthumbnailer imagemagick mediainfo libbsd nsxiv \
     noto-fonts noto-fonts-cjk noto-fonts-emoji libertinus-font \
-    git rsync syncthing aria2 openssh \
+    git rsync syncthing aria2 openssh fdupes zip \
     neovim python-pip npm nodejs texlive code linux-headers \
     btop tmux fzf lf xclip xwallpaper xcompmgr \
     gnome-keyring pcmanfm-gtk3 dmenu xorg xorg-xinit dunst clipmenu \
     firefox qbittorrent nicotine+ discord \
-    zathura zathura-pdf-mupdf \
+    zathura zathura-pdf-mupdf pamixer \
     zsh zsh-autosuggestions pass \
     yt-dlp perl-image-exiftool
 systemctl enable NetworkManager 
