@@ -45,12 +45,11 @@ pacman --noconfirm -Sy \
     pulseaudio pulsemixer pulseaudio-bluetooth bluez bluez-utils cmus \
     gimp mpv ffmpegthumbnailer imagemagick mediainfo libbsd nsxiv \
     noto-fonts noto-fonts-cjk noto-fonts-emoji libertinus-font \
-    git rsync syncthing aria2 openssh fdupes zip \
+    git rsync syncthing aria2 openssh fdupes zip libreoffice \
     neovim python-pip npm nodejs texlive code linux-headers \
     btop tmux fzf lf xclip xwallpaper xcompmgr \
     gnome-keyring pcmanfm-gtk3 dmenu xorg xorg-xinit dunst clipmenu \
-    firefox qbittorrent nicotine+ discord \
-    zathura zathura-pdf-mupdf pamixer \
+    firefox qbittorrent nicotine+ discord pamixer \
     zsh zsh-autosuggestions pass \
     yt-dlp perl-image-exiftool
 systemctl enable NetworkManager 
@@ -92,9 +91,8 @@ cp -r /mnt/hd3tb/backup/.ssh .
 cp -r /mnt/hd3tb/backup/.password-store .
 
 ln -s /mnt/hd3tb .
-ln -s /mnt/hd3tb/links/Downloads .
+ln -s /mnt/hd3tb/links/Pictures .
 ln -s /mnt/hd3tb/links/Documents .
-ln -s /mnt/hd3tb/links/Music .
 
 git clone --separate-git-dir=$HOME/.dotfiles git@github.com:rabpaulo/dots.git temparq
 rsync --recursive --exclude '.git' temparq/ $HOME/
@@ -112,7 +110,7 @@ cd
 
 sudo pacman -S --needed git base-devel && git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si cd $HOME
 
-yay -S cmusfm downgrade gallery-dl-git brave-bin nvim-packer-git ueberzugpp upscayl-bin
+yay -S downgrade gallery-dl-git nvim-packer-git ueberzugpp sioyek
 yay -Yc
 
 nvim -c ':PackerSync'
