@@ -49,8 +49,8 @@ pacman --noconfirm -Sy \
     neovim python-pip npm nodejs texlive code linux-headers \
     btop tmux fzf lf xclip xwallpaper xcompmgr \
     gnome-keyring pcmanfm-gtk3 dmenu xorg xorg-xinit dunst clipmenu \
-    firefox qbittorrent nicotine+ discord pamixer \
-    zsh zsh-autosuggestions pass \
+    firefox qbittorrent nicotine+ pamixer \
+    zsh zsh-autosuggestions pass bat zathura zathura-pdf-mupdf \
     yt-dlp perl-image-exiftool
 systemctl enable NetworkManager 
 systemctl enable bluetooth 
@@ -110,7 +110,7 @@ cd
 
 sudo pacman -S --needed git base-devel && git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si cd $HOME
 
-yay -S downgrade gallery-dl-git nvim-packer-git ueberzugpp sioyek
+yay -S downgrade gallery-dl-git nvim-packer-git ueberzugpp vesktop
 yay -Yc
 
 nvim -c ':PackerSync'
