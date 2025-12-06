@@ -52,7 +52,7 @@ pacman -Sy \
     gnome-keyring pcmanfm keepassxc dmenu xorg xorg-xinit dunst clipmenu \
     firefox qbittorrent nicotine+ pamixer \
     zsh zsh-autosuggestions pass bat zathura zathura-pdf-mupdf \
-    yt-dlp perl-image-exiftool maim
+    yt-dlp perl-image-exiftool maim qutebrowser pdfjs
 systemctl enable NetworkManager 
 systemctl enable bluetooth 
 
