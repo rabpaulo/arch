@@ -42,13 +42,13 @@ grub-mkconfig -o /boot/grub/grub.cfg
 
 pacman -Sy networkmanager git sudo zsh
 pacman -Sy \
-    networkmanager upower ufw polkit man file-roller p7zip unzip unrar bc jq \
+    networkmanager upower ufw polkit man file-roller p7zip unrar bc jq \
     pulseaudio pulsemixer pulseaudio-bluetooth bluez bluez-utils cmus \
     gimp mpv ffmpegthumbnailer imagemagick mediainfo libbsd nsxiv \
     noto-fonts noto-fonts-cjk noto-fonts-emoji libertinus-font \
-    git rsync syncthing aria2 openssh fdupes zip libreoffice \
+    git rsync syncthing aria2 openssh fdupes zip \
     neovim python-pip npm nodejs texlive code linux-headers \
-    btop tmux fzf lf xclip xwallpaper xcompmgr \
+    btop tmux fzf lf xclip xwallpaper \
     gnome-keyring pcmanfm keepassxc dmenu xorg xorg-xinit dunst clipmenu \
     firefox qbittorrent nicotine+ pamixer \
     zsh zsh-autosuggestions pass bat zathura zathura-pdf-mupdf \
@@ -111,7 +111,7 @@ cd
 
 sudo pacman -S --needed git base-devel && git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si cd $HOME
 
-yay -S downgrade gallery-dl-git nvim-packer-git ueberzugpp android-studio
+yay -S downgrade gallery-dl-git nvim-packer-git ueberzugpp vscodium-bin
 yay -Yc
 
 nvim -c ':PackerSync'
