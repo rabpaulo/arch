@@ -111,14 +111,12 @@ cd
 
 sudo pacman -S --needed git base-devel && git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si cd $HOME
 
-yay -S downgrade gallery-dl-git nvim-packer-git ueberzugpp vscodium-bin
+yay -S downgrade gallery-dl-git ueberzugpp vscodium-bin
 yay -Yc
-
-nvim -c ':PackerSync'
 
 cd 
 rm -rf  yay/ .cache temparq/ .dotfiles/ archinstall3.sh suckless-stuff .bash* suckless-stuff
 
-python -m venv venv
+python -m venv env
 
 exit
