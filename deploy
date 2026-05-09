@@ -52,7 +52,7 @@ pacman -Sy \
     gnome-keyring pcmanfm keepassxc dmenu xorg xorg-xinit dunst clipmenu \
     firefox qbittorrent nicotine+ pamixer \
     zsh zsh-autosuggestions pass bat zathura zathura-pdf-mupdf \
-    yt-dlp perl-image-exiftool maim qutebrowser pdfjs
+    yt-dlp perl-image-exiftool maim qutebrowser pdfjs discord
 systemctl enable NetworkManager 
 systemctl enable bluetooth 
 
@@ -111,7 +111,7 @@ cd
 
 sudo pacman -S --needed git base-devel && git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si cd $HOME
 
-yay -S downgrade gallery-dl-git ueberzugpp vscodium-bin
+yay -S downgrade gallery-dl-git ueberzugpp 
 yay -Yc
 
 cd 
