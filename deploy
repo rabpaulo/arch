@@ -5,9 +5,9 @@ pacman-key --init
 
 cfdisk /dev/nvme0n1
 
-boot="/dev/nvme0n1p5"
-swap="/dev/nvme0n1p6"
-root="/dev/nvme0n1p7"
+boot="/dev/nvme0n1p1"
+swap="/dev/nvme0n1p2"
+root="/dev/nvme0n1p3"
 
 clear
 mkfs.ext4 "$root"
@@ -46,13 +46,13 @@ pacman -Sy \
     pulseaudio pulsemixer pulseaudio-bluetooth bluez bluez-utils cmus \
     gimp mpv ffmpegthumbnailer imagemagick mediainfo libbsd nsxiv \
     noto-fonts noto-fonts-cjk noto-fonts-emoji libertinus-font \
-    git rsync syncthing aria2 openssh fdupes zip \
+    git rsync syncthing aria2 openssh fdupes zip unzip \
     neovim python-pip npm nodejs texlive code linux-headers \
     btop tmux fzf lf xclip xwallpaper \
     gnome-keyring pcmanfm keepassxc dmenu xorg xorg-xinit dunst clipmenu \
     firefox qbittorrent nicotine+ pamixer \
-    zsh zsh-autosuggestions pass bat zathura zathura-pdf-mupdf \
-    yt-dlp perl-image-exiftool maim qutebrowser pdfjs discord
+    zsh zsh-autosuggestions bat zathura zathura-pdf-mupdf \
+    yt-dlp perl-image-exiftool maim discord
 systemctl enable NetworkManager 
 systemctl enable bluetooth 
 
@@ -111,12 +111,13 @@ cd
 
 sudo pacman -S --needed git base-devel && git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si cd $HOME
 
-yay -S downgrade gallery-dl-git ueberzugpp 
+yay -S downgrade gallery-dl-git ueberzugpp brave-bin
 yay -Yc
 
 cd 
 rm -rf  yay/ .cache temparq/ .dotfiles/ archinstall3.sh suckless-stuff .bash* suckless-stuff
 
-python -m venv env
+mkdir Projects
+python -m venv Projects/env
 
 exit
