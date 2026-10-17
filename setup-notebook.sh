@@ -27,4 +27,10 @@ for d in dwm dwmblocks st dmenu; do
     (cd "$HOME/suckless-stuff/$d" && sudo make install)
 done
 
+echo ">> .xinitrc"
+if [ ! -f "$HOME/.xinitrc" ]; then
+    printf '#!/bin/sh\ndwmblocks &\nexec dwm\n' > "$HOME/.xinitrc"
+    chmod +x "$HOME/.xinitrc"
+fi
+
 echo "Pronto. Reinicie a sessao com: startx"
