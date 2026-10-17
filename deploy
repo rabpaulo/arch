@@ -114,16 +114,12 @@ mountpoint -q /mnt/ssd500 && ln -s /mnt/ssd500 .
 git clone --separate-git-dir=$HOME/.dotfiles git@github.com:rabpaulo/dots.git temparq
 rsync --recursive --exclude '.git' temparq/ $HOME/
 
-cd ~/hd3tb/repos/
-cd 'suckless-stuff/dwm/' 
-sudo make install
-cd '../dwmblocks/'
-sudo make install
-cd '../st/'
-sudo make install
-cd '../dmenu/'
-sudo make install
-cd 
+git clone git@github.com:rabpaulo/suckless-stuff.git $HOME/suckless-stuff
+cd $HOME/suckless-stuff/dwm && sudo make install
+cd ../dwmblocks && sudo make install
+cd ../st && sudo make install
+cd ../dmenu && sudo make install
+cd $HOME
 
 sudo pacman -S --needed git base-devel && git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si
 cd $HOME
@@ -134,7 +130,7 @@ yay -S --needed downgrade gallery-dl-git ueberzugpp brave-bin $wifi_extra
 yay -Yc
 
 cd 
-rm -rf  yay/ .cache temparq/ .dotfiles/ archinstall3.sh suckless-stuff .bash* suckless-stuff
+rm -rf  yay/ .cache temparq/ .dotfiles/ archinstall3.sh .bash*
 
 mkdir Projects
 python -m venv Projects/env
