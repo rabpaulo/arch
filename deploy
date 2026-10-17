@@ -3,11 +3,14 @@ sed -i "s/^#ParallelDownloads = 5$/ParallelDownloads = 10/" /etc/pacman.conf
 pacman --noconfirm -Sy archlinux-keyring
 pacman-key --init
 
-cfdisk /dev/nvme0n1
+lsblk -d -o NAME,SIZE,MODEL
+read -p "Disco para instalar (ex: /dev/nvme0n1 ou /dev/sda): " DISK
+case "$DISK" in *nvme*|*mmcblk*) psep=p ;; *) psep= ;; esac
+cfdisk "$DISK"
 
-boot="/dev/nvme0n1p1"
-swap="/dev/nvme0n1p2"
-root="/dev/nvme0n1p3"
+boot="${DISK}${psep}1"
+swap="${DISK}${psep}2"
+root="${DISK}${psep}3"
 
 clear
 mkfs.ext4 "$root"
@@ -17,9 +20,10 @@ mkfs.fat -F32 "$boot"
 mount "$root" /mnt
 mkdir -p /mnt/boot/efi 
 mount "$boot" /mnt/boot/efi
-pacstrap /mnt base base-devel linux linux-firmware sudo sed
+if grep -q GenuineIntel /proc/cpuinfo; then ucode=intel-ucode; else ucode=amd-ucode; fi
+pacstrap /mnt base base-devel linux linux-firmware $ucode sudo sed pciutils
 genfstab -U /mnt >> /mnt/etc/fstab
-sed '1,/^#part2$/d' `basename $0` > /mnt/archinstall2.sh
+(echo '#!/bin/sh'; sed '1,/^#part2$/d' `basename $0`) > /mnt/archinstall2.sh
 chmod +x /mnt/archinstall2.sh
 arch-chroot /mnt ./archinstall2.sh
 exit
@@ -31,20 +35,23 @@ ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
 hwclock --systohc
 echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
 locale-gen
+echo "LANG=en_US.UTF-8" > /etc/locale.conf
 echo "arch" >> /etc/hostname
 
 # Baixando e instalando GRUB
 pacman --noconfirm -S grub efibootmgr
 grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
 sed -i 's/GRUB_TIMEOUT=5/GRUB_TIMEOUT=0/' /etc/default/grub
-sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"/GRUB_CMDLINE_LINUX_DEFAULT="amdgpu.ppfeaturemask=0xffffffff loglevel=3 quiet"/g' /etc/default/grub
+if lspci | grep -Eqi '(vga|display).*(amd|ati)'; then
+    sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"/GRUB_CMDLINE_LINUX_DEFAULT="amdgpu.ppfeaturemask=0xffffffff loglevel=3 quiet"/g' /etc/default/grub
+fi
 grub-mkconfig -o /boot/grub/grub.cfg
 
 pacman -Sy networkmanager git sudo zsh
 pacman -Sy \
     networkmanager upower ufw polkit man file-roller p7zip unrar bc jq \
     pulseaudio pulsemixer pulseaudio-bluetooth bluez bluez-utils cmus \
-    gimp mpv ffmpegthumbnailer imagemagick mediainfo libbsd nsxiv \
+    mpv ffmpegthumbnailer imagemagick mediainfo libbsd nsxiv \
     noto-fonts noto-fonts-cjk noto-fonts-emoji libertinus-font \
     git rsync syncthing aria2 openssh fdupes zip unzip \
     neovim python-pip npm nodejs texlive code linux-headers \
@@ -52,48 +59,57 @@ pacman -Sy \
     gnome-keyring pcmanfm keepassxc dmenu xorg xorg-xinit dunst clipmenu \
     firefox qbittorrent nicotine+ pamixer \
     zsh zsh-autosuggestions bat zathura zathura-pdf-mupdf \
-    yt-dlp perl-image-exiftool maim discord
+    yt-dlp perl-image-exiftool maim tlp brightnessctl xf86-input-libinput acpi lm_sensors 
 systemctl enable NetworkManager 
-systemctl enable bluetooth 
+systemctl enable bluetooth
+systemctl enable tlp
+sed -i 's/^#HandleLidSwitch=.*/HandleLidSwitch=suspend/; s/^#HandleLidSwitchDocked=.*/HandleLidSwitchDocked=ignore/' /etc/systemd/logind.conf 
 
-id="$(ls -al /dev/disk/by-uuid/ | awk '/sda$/ {print $9}')"
-sudo mkdir -p /mnt/ssd500
-echo "UUID="$id"	/mnt/ssd500	ext4	defaults	0	0" >> /etc/fstab
-
-idhd=$(ls -al /dev/disk/by-uuid/ | awk '/sdb1$/ {print $9}')
-sudo mkdir -p /mnt/hd3tb
-echo "UUID="$idhd"	/mnt/hd3tb	ext4	defaults	0	0" >> /etc/fstab
-
-sed 's/#Experimental = false/Experimental = true/g' /etc/bluetooth/main.conf
-sed 's/#KernelExperimental = false/KernelExperimental = true/g' /etc/bluetooth/main.conf
+sed -i 's/#Experimental = false/Experimental = true/g' /etc/bluetooth/main.conf
+sed -i 's/#KernelExperimental = false/KernelExperimental = true/g' /etc/bluetooth/main.conf
 
 clear
 echo "Senha root"
 passwd
-echo " %wheel ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+echo "%wheel ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/wheel
+chmod 440 /etc/sudoers.d/wheel
 read -p "Nome do usuario: " usuario
 useradd -mG wheel -s /bin/zsh $usuario
 echo "Senha do usuario"
 passwd $usuario
 ai3_path=/home/$usuario/archinstall3.sh
-sed '1,/^#part3$/d' archinstall2.sh > $ai3_path
+(echo '#!/bin/sh'; sed '1,/^#part3$/d' archinstall2.sh) > $ai3_path
 chown $usuario:$usuario $ai3_path
 chmod +x $ai3_path
-su -c $ai3_path -s /bin/sh $usuario
+su -s /bin/sh -c "sh $ai3_path" $usuario
 exit 
 
 #part3
 cd
-sudo mount /dev/sda /mnt/ssd500
-sudo mount /dev/sdb1 /mnt/hd3tb
+ssd500_uuid="6df5dab7-f2de-4d40-9ede-b4b660144582"
+hd3tb_uuid="7ca39e85-4b89-468c-8679-088df14a526f"
+sudo mkdir -p /mnt/ssd500 /mnt/hd3tb
+if [ -e "/dev/disk/by-uuid/$ssd500_uuid" ]; then
+    sudo mount UUID="$ssd500_uuid" /mnt/ssd500
+else
+    echo "ssd500 não encontrado, pulando"
+fi
+if [ -e "/dev/disk/by-uuid/$hd3tb_uuid" ]; then
+    sudo mount UUID="$hd3tb_uuid" /mnt/hd3tb
+else
+    echo "hd3tb não encontrado, pulando"
+fi
 
-cp -r /mnt/hd3tb/backup/.mozilla .
-cp -r /mnt/hd3tb/backup/.ssh .
-cp -r /mnt/hd3tb/backup/.password-store .
+if mountpoint -q /mnt/hd3tb; then
+    cp -r /mnt/hd3tb/backup/.mozilla .
+    cp -r /mnt/hd3tb/backup/.ssh .
+    cp -r /mnt/hd3tb/backup/.password-store .
 
-ln -s /mnt/hd3tb .
-ln -s /mnt/hd3tb/links/Pictures .
-ln -s /mnt/hd3tb/links/Documents .
+    ln -s /mnt/hd3tb .
+    ln -s /mnt/hd3tb/links/Pictures .
+    ln -s /mnt/hd3tb/links/Documents .
+fi
+mountpoint -q /mnt/ssd500 && ln -s /mnt/ssd500 .
 
 git clone --separate-git-dir=$HOME/.dotfiles git@github.com:rabpaulo/dots.git temparq
 rsync --recursive --exclude '.git' temparq/ $HOME/
@@ -109,9 +125,12 @@ cd '../dmenu/'
 sudo make install
 cd 
 
-sudo pacman -S --needed git base-devel && git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si cd $HOME
+sudo pacman -S --needed git base-devel && git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si
+cd $HOME
 
-yay -S downgrade gallery-dl-git ueberzugpp brave-bin
+wifi_extra=""
+lspci | grep -i network | grep -qi broadcom && wifi_extra=broadcom-wl-dkms
+yay -S --needed downgrade gallery-dl-git ueberzugpp brave-bin $wifi_extra
 yay -Yc
 
 cd 
